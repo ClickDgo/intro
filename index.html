@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diseño de Experimentos - Diagnóstico y Metodología</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================   BASE========================================================= */
+:root{    --navy:#17365d;    --navy2:#234f7d;    --pink:#d81b60;    --green:#188038;    --red:#c5221f;    --gold:#b06000;    --text:#202124;    --muted:#6b7280;    --line:#e5e7eb;    --soft:#f7f9fc;    --white:#ffffff;}
+*{    box-sizing:border-box;}
+html{    scroll-behavior:smooth;}
+body{    margin:0;    background:white;    color:var(--text);    font-family:"Google Sans",Arial,sans-serif;}
+.container{    width:min(1480px,94%);    margin:auto;}
+/* =========================================================   HEADER========================================================= */
+.hero{    padding:48px 20px 34px;    border-bottom:1px solid var(--line);    text-align:center;}
+.hero h1{    margin:0;    font-size:38px;    line-height:1.15;    font-weight:700;    letter-spacing:-1px;}
+.hero h2{    margin:12px 0 0;    font-size:22px;    color:var(--navy);    font-weight:600;}
+.hero h3{    margin:8px 0 0;    font-size:18px;    font-weight:500;}
+.hero .students{    max-width:950px;    margin:10px auto 0;    color:var(--muted);    line-height:1.5;}
+/* =========================================================   NAV========================================================= */
+.navigation{    position:sticky;    top:0;    z-index:50;    background:rgba(255,255,255,.96);    backdrop-filter:blur(8px);    border-bottom:1px solid var(--line);    padding:14px 0;}
+.navigation select{    display:block;    width:min(850px,100%);    margin:auto;    border:1px solid #d6d9de;    border-radius:12px;    background:white;    padding:14px 17px;    font-family:inherit;    font-size:15px;    color:var(--text);    cursor:pointer;}
+/* =========================================================   SECTIONS========================================================= */
+.page{    display:none;    padding:42px 0 70px;}
+.page.active{    display:block;}
+.section-head{    margin-bottom:28px;}
+.section-head .eyebrow{    text-transform:uppercase;    font-size:12px;    font-weight:700;    letter-spacing:1.2px;    color:var(--navy2);    margin-bottom:7px;}
+.section-head h2{    margin:0;    font-size:30px;    letter-spacing:-.5px;}
+.section-head p{    max-width:1050px;    margin:10px 0 0;    color:var(--muted);    line-height:1.65;}
+/* =========================================================   PANELS========================================================= */
+.panel{    border:1px solid var(--line);    border-radius:18px;    background:white;    margin:22px 0;    overflow:hidden;}
+.panel-header{    padding:20px 23px 7px;}
+.panel-header h3{    margin:0;    font-size:20px;    color:var(--navy);}
+.panel-header p{    margin:6px 0 0;    color:var(--muted);    font-size:14px;    line-height:1.5;}
+.panel-body{    padding:15px 23px 22px;    line-height:1.7;    color:#374151;}
+.grid2{    display:grid;    grid-template-columns:1fr 1fr;    gap:20px;}
+@media(max-width:900px){    .grid2{        grid-template-columns:1fr;    }
+    .hero h1{        font-size:28px;    }}
+/* =========================================================   INTRO========================================================= */
+.intro-box{    background:var(--soft);    border-left:5px solid var(--navy);    border-radius:12px;    padding:24px 26px;    line-height:1.7;    margin-bottom:25px;}
+.intro-box h3{    margin:0 0 10px;    color:var(--navy);}
+/* =========================================================   NOTES========================================================= */
+.note{    padding:17px 20px;    border-radius:11px;    background:#fafafa;    border:1px solid var(--line);    line-height:1.6;    color:#4b5563;    margin-top:17px;}
+.note.warning{    border-left:5px solid #d99000;}
+.note.info{    border-left:5px solid var(--navy);}
+/* =========================================================   FOOTER========================================================= */
+footer{    border-top:1px solid var(--line);    text-align:center;    padding:30px 15px;    color:var(--muted);    font-size:14px;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+<div class="container">
+<h1>Diseño de Experimentos - Estadísticas Descriptivas</h1>
+<h2>Facultad de Ciencias Exactas - UJED</h2>
+<h3>Maestro Jesús Carreón Rodríguez</h3>
+<div class="students">Alumnos: Diana González Vázquez, Ángeles Sarahí Vargas Gutiérrez, Jesús Emmanuel Vázquez Macías.</div>
+</div>
+</header>
+
+<div class="navigation">
+<div class="container">
+<select id="sectionSelect" onchange="switchSection(this.value)">
+<option value="sec1">1. Diagnóstico del Modelo</option>
+<option value="sec2">2. Diagnóstico de los Residuos</option>
+<option value="sec3">3. Distribución de la Edad</option>
+<option value="sec4">4. Justificación de Errores Robustos HC3</option>
+</select>
+</div>
+</div>
+
+<main class="container">
+
+<!-- SECCIÓN 1 -->
+<section id="sec1" class="page active">
+<div class="section-head">
+<div class="eyebrow">Metodología</div>
+<h2>Diagnóstico del Modelo</h2>
+<p>Especificación de variables y criterios de depuración muestral.</p>
+</div>
+
+<div class="panel">
+<div class="panel-header">
+<h3>Estructura del Modelo y Exclusiones</h3>
+</div>
+<div class="panel-body">
+<p>La variable de respuesta fue <strong>Edad</strong> y se analizaron como factores <strong>Causa</strong>, <strong>Sexo</strong>, <strong>Escolaridad</strong>, <strong>Ocupación</strong> y <strong>Estado civil</strong>.</p>
+<p style="margin-top: 12px;">Para evitar categorías directamente determinadas por la edad, se excluyeron:</p>
+<ul style="margin-top: 8px; padding-left: 20px;">
+<li><strong>No aplica a menores de 3</strong> en Escolaridad.</li>
+<li><strong>No especificado/fuera de clasificación</strong> en Ocupación.</li>
+<li><strong>No aplica a menores de 12</strong> en Estado civil.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- SECCIÓN 2 -->
+<section id="sec2" class="page">
+<div class="section-head">
+<div class="eyebrow">Validación de Supuestos</div>
+<h2>Diagnóstico de los Residuos</h2>
+<p>Evaluación de normalidad y homocedasticidad del modelo.</p>
+</div>
+
+<div class="panel">
+<div class="panel-header">
+<h3>Análisis de Residuos y Varianza</h3>
+</div>
+<div class="panel-body">
+<p>Antes de interpretar el modelo se evaluaron sus residuos mediante asimetría, curtosis, Jarque-Bera, Omnibus, Shapiro-Wilk, histograma y gráfico Q-Q.</p>
+<p style="margin-top: 12px;">Los resultados muestran desviaciones respecto de la normalidad. Sin embargo, debido al gran tamaño de la muestra (<strong>75,603 observaciones</strong>), las pruebas formales de normalidad son muy sensibles y pueden detectar incluso desviaciones pequeñas. Por ello, la normalidad se valoró conjuntamente con los indicadores descriptivos y los gráficos.</p>
+<p style="margin-top: 12px;">También se evaluó la igualdad de varianzas mediante las pruebas de Levene y Brown-Forsythe. Los resultados evidenciaron <strong>heterocedasticidad</strong>, es decir, la variabilidad de la edad no es igual entre los grupos.</p>
+</div>
+</div>
+</section>
+
+<!-- SECCIÓN 3 -->
+<section id="sec3" class="page">
+<div class="section-head">
+<div class="eyebrow">Análisis Exploratorio</div>
+<h2>Distribución de la Edad</h2>
+<p>Visualización gráfica de las diferencias entre factores.</p>
+</div>
+
+<div class="panel">
+<div class="panel-header">
+<h3>Evidencia Descriptiva Inicial</h3>
+</div>
+<div class="panel-body">
+<p>Los boxplots permiten observar gráficamente las diferencias en la distribución de la edad según Causa, Sexo, Escolaridad, Ocupación y Estado civil, así como las diferencias de edad entre las causas dentro de cada uno de estos factores.</p>
+<p style="margin-top: 12px;">Estos gráficos constituyen la primera evidencia descriptiva para identificar diferencias en las medianas, dispersión y valores extremos antes de interpretar los resultados inferenciales.</p>
+</div>
+</div>
+</section>
+
+<!-- SECCIÓN 4 -->
+<section id="sec4" class="page">
+<div class="section-head">
+<div class="eyebrow">Inferencia Robusta</div>
+<h2>¿Por qué se utilizó HC3?</h2>
+<p>Fundamentación estadística del uso de errores estándar robustos.</p>
+</div>
+
+<div class="panel">
+<div class="panel-header">
+<h3>Corrección por Heterocedasticidad</h3>
+</div>
+<div class="panel-body">
+<p>Debido a la presencia de heterocedasticidad, los errores estándar convencionales del modelo podrían no representar adecuadamente la incertidumbre de los coeficientes.</p>
+<p style="margin-top: 12px;">Por ello se utilizaron errores estándar robustos <strong>HC3 (Heteroskedasticity-Consistent 3)</strong>.</p>
+<p style="margin-top: 12px;">HC3 no modifica los coeficientes estimados; modifica el cálculo de sus errores estándar, intervalos de confianza y valores p para hacer la inferencia más robusta frente a la desigualdad de varianzas y a la posible influencia de observaciones con alto leverage.</p>
+<p style="margin-top: 12px;">En este estudio, HC3 se eligió porque permite conservar el modelo lineal utilizado para comparar la edad entre los grupos, pero realizar la inferencia sin depender del supuesto de varianzas iguales.</p>
+<div class="note warning" style="margin-top: 15px;">
+<strong>Nota importante:</strong> HC3 no corrige la falta de normalidad. Su función principal es hacer más robusta la inferencia ante la heterocedasticidad detectada en los datos.
+</div>
+</div>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="container">
+Universidad Juárez del Estado de Durango &bull; Maestría en Estadística Aplicada &bull; Diseño de Experimentos
+</div>
+</footer>
+
+<script>
+function switchSection(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
